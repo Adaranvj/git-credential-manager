@@ -41,16 +41,14 @@ mkdir -p "$PAYLOAD","$SYMBOLS"
 # Publish core application executables
 Write-Output "Publishing core application..."
 dotnet publish "$GCM_SRC" `
-    --framework net472 `
+	--framework net472 `
 	--configuration "$CONFIGURATION" `
 	--runtime win-x86 `
 	--output "$PAYLOAD"
 
 Write-Output "Publishing core UI helper..."
 dotnet publish "$GCM_UI_SRC" `
-	--framework net472 `
 	--configuration "$CONFIGURATION" `
-	--runtime win-x86 `
 	--output "$PAYLOAD"
 
 Write-Output "Publishing Bitbucket UI helper..."
@@ -67,6 +65,13 @@ Write-Output "Publishing GitLab UI helper..."
 dotnet publish "$GITLAB_UI_SRC" `
 	--configuration "$CONFIGURATION" `
 	--output "$PAYLOAD" 
+
+# Create copy of main GCM executable with older "GCM Core" name
+Copy-Item -Path "$PAYLOAD/git-credential-manager.exe" `
+	-Destination "$PAYLOAD/git-credential-manager-core.exe"
+
+Copy-Item -Path "$PAYLOAD/git-credential-manager.exe.config" `
+	-Destination "$PAYLOAD/git-credential-manager-core.exe.config"
 
 # Collect symbols
 Write-Output "Collecting managed symbols..."

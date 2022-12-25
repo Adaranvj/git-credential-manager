@@ -65,7 +65,7 @@ namespace GitCredentialManager.Interop.Linux
                     throw new InteropException("Failed to search for credentials", code, new Exception(message));
                 }
 
-                if (results != null && results->data != null)
+                if (results != null && results->data != IntPtr.Zero)
                 {
                     SecretItem* item = (SecretItem*) results->data;
 
@@ -291,7 +291,6 @@ namespace GitCredentialManager.Interop.Linux
                 if (accountKeyPtr != IntPtr.Zero) Marshal.FreeHGlobal(accountKeyPtr);
                 if (serviceKeyPtr != IntPtr.Zero) Marshal.FreeHGlobal(serviceKeyPtr);
                 if (value != null) secret_value_unref(value);
-                if (passwordPtr != IntPtr.Zero) secret_password_free(passwordPtr);
                 if (error != null) g_error_free(error);
             }
         }

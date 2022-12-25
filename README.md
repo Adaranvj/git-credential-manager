@@ -4,20 +4,26 @@
 
 ---
 
-[Git Credential Manager][gcm] (GCM) is a secure Git credential helper built on
-[.NET][dotnet] that runs on Windows, macOS, and Linux.
+[Git Credential Manager][gcm] (GCM) is a secure
+[Git credential helper][git-credential-helper] built on [.NET][dotnet] that runs
+on Windows, macOS, and Linux. It aims to provide a consistent and secure
+authentication experience, including multi-factor auth, to every major source
+control hosting service and platform.
 
-Compared to Git's [built-in credential helpers][git-tools-credential-storage]
-(Windows: wincred, macOS: osxkeychain, Linux: gnome-keyring/libsecret) which
-provides single-factor authentication support working on any HTTP-enabled Git
-repository, GCM provides multi-factor authentication support for
-[Azure DevOps][azure-devops], Azure DevOps Server (formerly Team Foundation
-Server), GitHub, Bitbucket, and GitLab.
+GCM supports (in alphabetical order) [Azure DevOps][azure-devops], Azure DevOps
+Server (formerly Team Foundation Server), Bitbucket, GitHub, and GitLab.
+Compare to Git's [built-in credential helpers][git-tools-credential-storage]
+(Windows: wincred, macOS: osxkeychain, Linux: gnome-keyring/libsecret), which
+provide single-factor authentication support for username/password only.
 
-Git Credential Manager (GCM) replaces the .NET Framework-based
-[Git Credential Manager for Windows][gcm-for-windows] (GCM), and the Java-based
-[Git Credential Manager for Mac and Linux][gcm-for-mac-and-linux] (Java GCM),
-providing a consistent authentication experience across all platforms.
+GCM replaces both the .NET Framework-based
+[Git Credential Manager for Windows][gcm-for-windows] and the Java-based
+[Git Credential Manager for Mac and Linux][gcm-for-mac-and-linux].
+
+## Install
+
+See the [installation instructions][install] for the current version of GCM for
+install options for your operating system.
 
 ## Current status
 
@@ -44,195 +50,8 @@ Proxy support|&#10003;|&#10003;|&#10003;
 `arm64` support|best effort|&#10003;|best effort, no packages
 `armhf` support|_N/A_|_N/A_|best effort, no packages
 
-(\*) GCM guarantees support for the below Linux distributions. GCM maintainers
-also monitor and evaluate issues opened against other distributions to determine
-community interest/engagement and whether an emerging platform should become
-fully-supported.
-
-- Debian/Ubuntu/Linux Mint
-- Fedora/CentOS/RHEL
-- Alpine
-
-## Download and Install
-
-### macOS Homebrew
-
-The preferred installation mechanism is using Homebrew; we offer a Cask in our
-custom Tap.
-
-To install, run the following:
-
-```shell
-brew tap microsoft/git
-brew install --cask git-credential-manager-core
-```
-
-After installing you can stay up-to-date with new releases by running:
-
-```shell
-brew upgrade git-credential-manager-core
-```
-
-#### Git Credential Manager for Mac and Linux (Java-based GCM)
-
-If you have an existing installation of the 'Java GCM' on macOS and you have
-installed this using Homebrew, this installation will be unlinked
-(`brew unlink git-credential-manager`) when GCM is installed.
-
-#### Uninstall
-
-To uninstall, run the following:
-
-```shell
-brew uninstall --cask git-credential-manager-core
-```
-
----
-
-### macOS Package
-
-We also provide a [.pkg installer][latest-release] with each release. To install,
-double-click the installation package and follow the instructions presented.
-
-#### Uninstall
-
-To uninstall, run the following:
-
-```shell
-sudo /usr/local/share/gcm-core/uninstall.sh
-```
-
----
-
-<!-- this explicit anchor should stay stable so that external docs can link here -->
-<!-- markdownlint-disable-next-line no-inline-html -->
-<a name="linux-install-instructions"></a>
-
-### Linux
-
-#### Ubuntu/Debian distributions
-
-Download the latest [.deb package][latest-release], and run the following:
-
-```shell
-sudo dpkg -i <path-to-package>
-git-credential-manager-core configure
-```
-
-**Note:** Although packages were previously offered on certain
-[Microsoft Ubuntu package feeds][ms-package-repos],
-GCM no longer publishes to these repositories. Please install the
-Debian package using the above instructions instead.
-
-To uninstall:
-
-```shell
-git-credential-manager-core unconfigure
-sudo dpkg -r gcmcore
-```
-
-#### Other distributions
-
-##### Option 1: Tarball
-
-Download the latest [tarball][latest-release], and run the following:
-
-```shell
-tar -xvf <path-to-tarball> -C /usr/local/bin
-git-credential-manager-core configure
-```
-
-To uninstall:
-
-```shell
-git-credential-manager-core unconfigure
-rm $(command -v git-credential-manager-core)
-```
-
-#### Option 2: Install from source helper script
-
-1. Ensure `curl` is installed:
-
-   ```shell
-   curl --version
-   ```
-
-   If `curl` is not installed, please use your distribution's package manager
-   to install it.
-
-1. Download and run the script:
-
-   ```shell
-   curl -LO https://raw.githubusercontent.com/GitCredentialManager/git-credential-manager/main/src/linux/Packaging.Linux/install-from-source.sh &&
-   sh ./install-from-source.sh &&
-   git-credential-manager-core configure
-   ```
-
-   **Note:** You will be prompted to enter your credentials so that the script
-   can download GCM's dependencies using your distribution's package
-   manager.
-
-To uninstall:
-
-[Follow these instructions][linux-uninstall] for your distribution.
-
-**Note:** all Linux distributions
-[require additional configuration][gcm-credstores] to use GCM.
-
----
-
-### Windows
-
-GCM is included with [Git for Windows][git-for-windows], and the latest version
-is included in each new Git for Windows release. This is the preferred way to
-install GCM on Windows. During installation you will be asked to select a
-credential helper, with GCM being set as the default.
-
-![image][git-for-windows-screenshot]
-
-#### Standalone installation
-
-You can also download the [latest installer][latest-release] for Windows to
-install GCM standalone.
-
-**:warning: Important :warning:**
-
-Installing GCM as a standalone package on Windows will forcibly override the
-version of GCM that is bundled with Git for Windows, **even if the version
-bundled with Git for Windows is a later version**.
-
-There are two flavors of standalone installation on Windows:
-
-- User (preferred) (`gcmuser-win*`):
-
-  Does not require administrator rights. Will install only for the current user
-  and updates only the current user's Git configuration.
-
-- System (`gcm-win*`):
-
-  Requires administrator rights. Will install for all users on the system and
-  update the system-wide Git configuration.
-
-To install, double-click the desired installation package and follow the
-instructions presented.
-
-#### Uninstall (Windows 10)
-
-To uninstall, open the Settings app and navigate to the Apps section. Select
-"Git Credential Manager" and click "Uninstall".
-
-#### Uninstall (Windows 7-8.1)
-
-To uninstall, open Control Panel and navigate to the Programs and Features
-screen. Select "Git Credential Manager" and click "Remove".
-
-#### Windows Subsystem for Linux (WSL)
-
-Git Credential Manager can be used with the [Windows Subsystem for Linux
-(WSL)][ms-wsl] to enable secure authentication of your remote Git
-repositories from inside of WSL.
-
-[Please see the GCM on WSL docs][gcm-wsl] for more information.
+(\*) GCM guarantees support only for [the Linux distributions that are officially
+supported by dotnet][dotnet-distributions].
 
 ## Supported Git versions
 
@@ -271,18 +90,7 @@ See detailed information [here][gcm-http-proxy].
 
 ## Additional Resources
 
-- [Frequently asked questions][gcm-faq]
-- [Development and debugging][gcm-dev]
-- [Command-line usage][gcm-usage]
-- [Configuration options][gcm-config]
-- [Environment variables][gcm-env]
-- [Enterprise configuration][gcm-enterprise-config]
-- [Network and HTTP configuration][gcm-net-config]
-- [Credential stores][gcm-credstores]
-- [Architectural overview][gcm-arch]
-- [Host provider specification][gcm-host-provider]
-- [Azure Repos OAuth tokens][gcm-azure-tokens]
-- [GitLab support][gcm-gitlab]
+See the [documentation index][docs-index] for links to additional resources.
 
 ## Experimental Features
 
@@ -306,37 +114,25 @@ When using GitHub logos, please be sure to follow the
 [bitbucket]: https://bitbucket.org
 [bitbucket-ssh]: https://confluence.atlassian.com/bitbucket/ssh-keys-935365775.html
 [build-status-badge]: https://github.com/GitCredentialManager/git-credential-manager/actions/workflows/continuous-integration.yml/badge.svg
+[docs-index]: https://github.com/GitCredentialManager/git-credential-manager/blob/release/docs/README.md
 [dotnet]: https://dotnet.microsoft.com
+[dotnet-distributions]: https://learn.microsoft.com/en-us/dotnet/core/install/linux
+[git-credential-helper]: https://git-scm.com/docs/gitcredentials
 [gcm]: https://github.com/GitCredentialManager/git-credential-manager
-[gcm-arch]: docs/architecture.md
-[gcm-azure-tokens]: docs/azrepos-users-and-tokens.md
 [gcm-coc]: CODE_OF_CONDUCT.md
 [gcm-commit-12294990]: https://github.com/git/git/commit/12294990c90e043862be9eb7eb22c3784b526340
-[gcm-config]: docs/configuration.md
 [gcm-contributing]: CONTRIBUTING.md
-[gcm-credstores]: docs/credstores.md
-[gcm-dev]: docs/development.md
-[gcm-enterprise-config]: docs/enterprise-config.md
-[gcm-env]: docs/environment.md
-[gcm-faq]: docs/faq.md
+[gcm-credstores]: https://github.com/GitCredentialManager/git-credential-manager/blob/release/docs/credstores.md
 [gcm-for-mac-and-linux]: https://github.com/microsoft/Git-Credential-Manager-for-Mac-and-Linux
 [gcm-for-windows]: https://github.com/microsoft/Git-Credential-Manager-for-Windows
-[gcm-gitlab]: docs/gitlab.md
-[gcm-host-provider]: docs/hostprovider.md
-[gcm-http-proxy]: docs/netconfig.md#http-proxy
+[gcm-http-proxy]: https://github.com/GitCredentialManager/git-credential-manager/blob/release/docs/netconfig.md#http-proxy
 [gcm-license]: LICENSE
-[gcm-net-config]: docs/netconfig.md
-[gcm-usage]: docs/usage.md
-[gcm-windows-broker]: docs/windows-broker.md
-[gcm-wsl]: docs/wsl.md
-[git-for-windows]: https://gitforwindows.org/
-[git-for-windows-screenshot]: https://user-images.githubusercontent.com/5658207/140082529-1ac133c1-0922-4a24-af03-067e27b3988b.png
+[gcm-usage]: https://github.com/GitCredentialManager/git-credential-manager/blob/release/docs/usage.md
+[gcm-windows-broker]: https://github.com/GitCredentialManager/git-credential-manager/blob/release/docs/windows-broker.md
 [git-tools-credential-storage]: https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage
 [github]: https://github.com
 [github-ssh]: https://help.github.com/en/articles/connecting-to-github-with-ssh
 [github-logos]: https://github.com/logos
-[latest-release]: https://github.com/GitCredentialManager/git-credential-manager/releases/latest
-[linux-uninstall]: docs/linux-fromsrc-uninstall.md
+[install]: https://github.com/GitCredentialManager/git-credential-manager/blob/release/docs/install.md
 [ms-package-repos]: https://packages.microsoft.com/repos/
-[ms-wsl]: https://aka.ms/wsl#
 [workflow-status]: https://github.com/GitCredentialManager/git-credential-manager/actions/workflows/continuous-integration.yml
